@@ -1,0 +1,30 @@
+USE [VordataSQL_PremierCatering_Training]
+GO
+/****** Object:  Trigger [dbo].[tr_d_Orders]    Script Date: 08/02/18 10:46:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER TRIGGER [dbo].[tr_d_Orders]
+   ON  [dbo].[Orders]
+   after delete
+AS 
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    if exists(select * from deleted)
+	begin
+		insert into [Orders deleted] (doormn,doorslmn,doorfordeliveryon,doortakendate,DOORDELETEDATE,doorreference,dopickingsheet,doreleased,dosysaudit,DOORDAMN,douser)
+								select ormn,orslmn,ORForDeliveryOn,ORTakenDate,getdate(),ORReference,ORPackingSheet,ORReleased,1,ORDAMN,CURRENT_USER 
+			from 
+			deleted 
+		end 
+
+END
